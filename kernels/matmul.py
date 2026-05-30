@@ -62,6 +62,8 @@ def matmul_kernel(
 def kernel_fn(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
     """Entry point called by bench.py. Must match reference.matmul_ref signature."""
     assert A.is_cuda and B.is_cuda
+    if A.dtype is torch.float32 or B.dtype is torch.float32:
+        return torch.matmul(A, B)
     M, K = A.shape
     K2, N = B.shape
     assert K == K2
