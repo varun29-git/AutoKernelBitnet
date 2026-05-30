@@ -73,6 +73,20 @@ uv run profile.py --module transformers --class-name AutoModelForCausalLM \
   --pretrained org/model-id --input-shape 1,2048 --dtype float16
 ```
 
+### Working Without Local GPU Access
+
+Local machines without CUDA can still edit, review, and run scaffold checks:
+
+```bash
+python3 -m compileall -q .
+python3 -m unittest discover -s tests -v
+```
+
+Run all GPU-dependent commands in the cloud H100 notebook. If an AI agent runs
+inside that cloud VM, set its provider key there as an environment variable such
+as `OPENAI_API_KEY`; the profiling and benchmark scripts themselves do not use
+the key.
+
 ## Running the Agent
 
 Spin up Claude, Codex, or any coding agent in this directory:
