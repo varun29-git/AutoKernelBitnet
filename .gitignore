@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+worktrees/
+
+# Agent prompt files
+CLAUDE.md
+AGENTS.md
+
+# Experimental artifacts
+dev/
+results.tsv
+run.log
+*.log
+
+# Cache
+.cache/
+
+# Analysis output (regenerated)
+report.md
+
+# Profiler traces
+traces/
+
+# Workspace (runtime artifacts)
+workspace/
