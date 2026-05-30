@@ -73,6 +73,25 @@ class ScaffoldTests(unittest.TestCase):
         self.assertEqual(data["nbformat"], 4)
         self.assertGreaterEqual(len(data["cells"]), 6)
 
+    def test_test2_bitnet_tiny_forward(self) -> None:
+        model_mod = load_script("autokernel_test2_bitnet", ROOT / "models" / "test2_bitnet.py")
+
+        config = model_mod.BitNetLlamaConfig(
+            vocab_size=128,
+            dim=64,
+            n_layers=1,
+            n_heads=4,
+            n_kv_heads=2,
+            ffn_dim=128,
+            max_seq_len=32,
+        )
+        model = model_mod.BitNetLlama(config)
+        input_ids = __import__("torch").randint(1, config.vocab_size, (1, 8))
+        output = model(input_ids=input_ids, return_logits=False)
+
+        self.assertIn("loss", output)
+        self.assertIsNone(output["logits"])
+
 
 if __name__ == "__main__":
     unittest.main()

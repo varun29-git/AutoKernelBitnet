@@ -52,7 +52,7 @@ uv run bench.py
 
 This scaffold is prepared for cloud H100 notebook use. Open
 `notebooks/autokernel_h100.ipynb`, run the environment check, then keep the
-default toy LLaMA config until your real model is ready. The notebook follows
+default Test 2 BitNet config unless you want to swap models. The notebook follows
 the paper pipeline:
 
 1. `prepare.py` creates runtime data and baseline caches.
@@ -147,6 +147,7 @@ Self-contained model definitions ship with AutoKernel (no `transformers` library
 | LLaMA (compact) | `models/llama_7b.py` | 160M | `--class-name LlamaModel --input-shape 1,512` |
 | LLaMA 7B | `models/llama_7b.py` | 7B | `--class-name LlamaModel7B --input-shape 1,2048` |
 | BERT-base | `models/bert_base.py` | 110M | `--class-name BertModel --input-shape 8,512` |
+| Test 2 BitNet | `models/test2_bitnet.py` | custom | `--class-name BitNetLlama --input-shape 1,2048 --dtype bfloat16` |
 | Custom | `models/custom.py` | -- | Template for your own model |
 
 For HuggingFace models (`uv sync --extra models`):
