@@ -87,6 +87,12 @@ inside that cloud VM, set its provider key there as an environment variable such
 as `OPENAI_API_KEY`; the profiling and benchmark scripts themselves do not use
 the key.
 
+For the Test 2 BitNet model, the fastest cloud terminal path is:
+
+```bash
+./scripts/start_h100_test2.sh
+```
+
 ## Running the Agent
 
 Spin up Claude, Codex, or any coding agent in this directory:
