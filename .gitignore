@@ -10,6 +10,11 @@ wheels/
 .venv
 worktrees/
 
+# Local secrets
+.env
+.env.*
+!.env.example
+
 # Agent prompt files
 CLAUDE.md
 AGENTS.md
