@@ -3,6 +3,8 @@ from __future__ import annotations
 import importlib.util
 import json
 import sys
+import tempfile
+import textwrap
 import unittest
 from pathlib import Path
 
@@ -56,6 +58,38 @@ class ScaffoldTests(unittest.TestCase):
         self.assertEqual(profile.classify_kernel("rms_norm_forward_kernel"), "rmsnorm")
         self.assertEqual(profile.classify_kernel("rope_apply_kernel"), "rotary_embedding")
         self.assertEqual(profile.classify_kernel("unrelated_kernel"), "other")
+
+    def test_profile_loads_dataclass_model_file(self) -> None:
+        profile = load_script("autokernel_profile_loader_script", ROOT / "profile.py")
+
+        source = textwrap.dedent(
+            """
+            from __future__ import annotations
+
+            from dataclasses import dataclass
+            import torch.nn as nn
+
+
+            @dataclass(frozen=True)
+            class TinyConfig:
+                width: int = 1
+
+
+            class TinyModel(nn.Module):
+                def __init__(self) -> None:
+                    super().__init__()
+                    self.config = TinyConfig()
+
+                def forward(self, x):
+                    return x
+            """
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "tiny_model.py"
+            path.write_text(source, encoding="utf-8")
+            model = profile._load_model_from_file(str(path), "TinyModel")
+
+        self.assertEqual(type(model).__name__, "TinyModel")
 
     def test_amdahl_estimate(self) -> None:
         orchestrate = load_script("autokernel_orchestrate_script", ROOT / "orchestrate.py")

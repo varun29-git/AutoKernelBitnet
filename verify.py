@@ -107,11 +107,13 @@ def load_model_from_file(model_path: str, class_name: str, **kwargs) -> nn.Modul
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model file not found: {model_path}")
 
-    spec = importlib.util.spec_from_file_location("user_model", model_path)
+    module_name = Path(model_path).stem
+    spec = importlib.util.spec_from_file_location(module_name, model_path)
     if spec is None or spec.loader is None:
         raise ImportError(f"Cannot import model from: {model_path}")
 
     mod = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = mod
     spec.loader.exec_module(mod)
 
     if not hasattr(mod, class_name):
@@ -401,6 +403,7 @@ def load_kernel_module(path: str) -> Any:
     if spec is None or spec.loader is None:
         raise ImportError(f"Cannot load kernel from: {path}")
     mod = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = mod
     spec.loader.exec_module(mod)
     return mod
 

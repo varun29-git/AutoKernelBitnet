@@ -227,6 +227,7 @@ def _load_model_from_file(model_path: str, class_name: str) -> nn.Module:
     if spec is None or spec.loader is None:
         raise ImportError(f"Cannot create module spec from {model_path}")
     module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)  # type: ignore[union-attr]
 
     if not hasattr(module, class_name):
