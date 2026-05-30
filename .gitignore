@@ -30,4 +30,5 @@ report.md
 traces/
 
 # Workspace (runtime artifacts)
-workspace/
+workspace/*
+!workspace/.gitkeep
