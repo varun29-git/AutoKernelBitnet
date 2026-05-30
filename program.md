@@ -16,8 +16,19 @@ The workflow has three phases:
 | **B: Multi-Kernel Optimization** | Optimize each kernel in priority order | Fully autonomous |
 | **C: Integration** | Verify end-to-end, generate final report | Autonomous, human reviews |
 
-A typical run covers 5-10 kernels across 10+ hours. You should expect to run 300+ experiments
-total across all kernels.
+A typical paper-style run covers 5-10 kernels across 10+ hours. For this repo's
+current Test 2 BitNet run, the GPU budget is only 1 hour. Expect roughly 30-40
+experiments after setup, optimize only the highest-impact kernels, and prefer
+quick measurable wins over broad exploration.
+
+## Current Run Budget: Test 2 BitNet, 1 Hour
+
+- Model: `models/test2_bitnet.py`, class `BitNetLlama`
+- Input: `--input-shape 1,2048 --dtype bfloat16`
+- Default extraction: top 3 bottleneck kernels
+- Move on after 3 consecutive reverts, 20 minutes on one kernel, 90% peak, or 1.5x speedup
+- Always preserve the best passing kernel before moving on
+- If setup/profiling consumes a large part of the hour, optimize only the top kernel and run `verify.py`
 
 ---
 
@@ -85,7 +96,7 @@ Top bottleneck ops:
 ### A4. Extract kernels for optimization
 
 ```bash
-uv run extract.py --top 5
+uv run extract.py --top 3
 ```
 
 This extracts the top bottleneck kernels into the workspace:
@@ -733,9 +744,9 @@ asm volatile("cp.async.wait_group 0;");
 The orchestrator uses these criteria, but you should understand them:
 
 1. **Target reached**: Kernel achieves the speedup target (e.g., 2x).
-2. **Plateau detected**: Last 10-15 experiments all failed to improve throughput.
+2. **Plateau detected**: Last 3 experiments failed to improve throughput during this one-hour run.
 3. **Diminishing returns**: Optimizing the next kernel would yield more total benefit.
-4. **Time budget**: If a per-kernel time budget was set, respect it.
+4. **Time budget**: Respect the 20-minute per-kernel cap and the 1-hour total GPU budget.
 
 ### When to revisit a previous kernel
 
@@ -836,7 +847,7 @@ If the orchestration state becomes corrupted:
 cat workspace/orchestration_state.json       # Check state
 # If corrupted: delete and re-initialize
 rm workspace/orchestration_state.json
-uv run extract.py --top 5                    # Re-generates plan + state
+uv run extract.py --top 3                    # Re-generates plan + state
 ```
 
 ### Verification OOM

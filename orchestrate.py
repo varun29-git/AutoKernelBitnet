@@ -39,10 +39,10 @@ REPORT_PATH = WORKSPACE / "aggregate_report.md"
 # ---------------------------------------------------------------------------
 
 MOVE_ON_CRITERIA = {
-    "consecutive_reverts": 5,       # last N experiments all reverted
+    "consecutive_reverts": 3,       # last N experiments all reverted
     "pct_peak_threshold": 90.0,     # achieved N% of theoretical GPU peak
-    "max_minutes_per_kernel": 120,  # 2 hours max per kernel
-    "speedup_threshold": 2.0,       # already 2x vs baseline
+    "max_minutes_per_kernel": 20,   # one-hour H100 rental: move fast across kernels
+    "speedup_threshold": 1.5,       # good enough within the one-hour budget
 }
 
 # ---------------------------------------------------------------------------

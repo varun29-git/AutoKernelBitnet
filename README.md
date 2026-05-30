@@ -93,6 +93,10 @@ For the Test 2 BitNet model, the fastest cloud terminal path is:
 ./scripts/start_h100_test2.sh
 ```
 
+The launch script is tuned for a one-hour H100 window: it extracts the top 3
+kernels by default and uses aggressive move-on criteria so the agent focuses on
+quick, high-impact improvements.
+
 ## Running the Agent
 
 Spin up Claude, Codex, or any coding agent in this directory:
@@ -107,7 +111,7 @@ The agent will:
 3. Optimize each bottleneck kernel in priority order
 4. Verify end-to-end correctness and report total speedup
 
-`program.md` is intentionally comprehensive so the agent can run 10+ hours without getting stuck. It includes a 6-tier optimization playbook, decision framework, crash handling, and Amdahl's law reasoning.
+`program.md` is intentionally comprehensive so the agent can run long autonomous sessions, while this Test 2 setup is tuned for a one-hour H100 window. It includes a 6-tier optimization playbook, decision framework, crash handling, and Amdahl's law reasoning.
 
 ## The Pipeline
 
