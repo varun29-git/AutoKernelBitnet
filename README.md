@@ -48,6 +48,31 @@ uv run extract.py --top 5
 uv run bench.py
 ```
 
+## H100 Jupyter Workflow
+
+This scaffold is prepared for cloud H100 notebook use. Open
+`notebooks/autokernel_h100.ipynb`, run the environment check, then keep the
+default toy LLaMA config until your real model is ready. The notebook follows
+the paper pipeline:
+
+1. `prepare.py` creates runtime data and baseline caches.
+2. `profile.py` writes `workspace/profile_report.json`.
+3. `extract.py` writes `workspace/kernel_<type>_<rank>.py` and
+   `workspace/optimization_plan.json`.
+4. `bench.py` validates `kernel.py` with the fixed correctness harness.
+5. `orchestrate.py` tracks Amdahl-prioritized progress.
+6. `verify.py` checks model-level correctness and speedup.
+
+For later model handoff, use one of these forms:
+
+```bash
+uv run profile.py --model path/to/model.py --class-name ModelClass \
+  --input-shape 1,2048 --dtype float16
+
+uv run profile.py --module transformers --class-name AutoModelForCausalLM \
+  --pretrained org/model-id --input-shape 1,2048 --dtype float16
+```
+
 ## Running the Agent
 
 Spin up Claude, Codex, or any coding agent in this directory:
